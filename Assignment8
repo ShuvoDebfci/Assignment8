@@ -1,387 +1,178 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_grid/responsive_grid.dart';
 
 void main() {
-runApp(Home());
+  runApp(MyApp());
 }
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final isWideScreen = MediaQuery.of(context).size.width > 500;
-
-    return Scaffold(
-      backgroundColor: (Colors.grey.shade200),
-      appBar: AppBar(
-        title: const Text('Profile'),
-      ),
-      body: Center(
-        child: isWideScreen
-            ? const LandScapeScreenProfile() // Landscape layout
-            : const PortraitScreenProfile(), // Portrait layout
-      ),
+    return MaterialApp(
+      home: DynamicGallery(),
     );
   }
 }
 
-
-class LandScapeScreenProfile extends StatelessWidget {
-  const LandScapeScreenProfile({super.key});
+class DynamicGallery extends StatefulWidget {
+  const DynamicGallery({Key? key}) : super(key: key);
 
   @override
+  _DynamicGalleryState createState() => _DynamicGalleryState();
+}
+
+class _DynamicGalleryState extends State<DynamicGallery> {
+  @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: CircleAvatar(
-            radius: 180,
-            backgroundImage: NetworkImage(
-              'https://picsum.photos/250?image=9',
-            ),
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Profile'),
+      ),
+      body: OrientationBuilder(builder: (context, orientation) {
+        if (orientation == Orientation.portrait) {
+          return SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
+                Center(
+                  child: Container(
+                    height: 300,
+                    width: 300,
+                    child: ClipOval(
+                      child: Image.network(
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO1CV0pHwcT9Y3Z1oHHypnKTPU0zYIXa4F1GTARLZn&s',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5),
+                Container(
                   child: Text(
                     'Shuvo Dabnath',
                     style: TextStyle(
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      fontSize: 24,
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 100, // Fixed height to enable scrolling
-                  child: ListView(
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.all(0),
-                        child: Text(
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(fontSize: 16),
+                SizedBox(height: 10),
+                Container(
+                  child: Text(
+                    'Lorem Ipsum is simply dummy text of the printing and typesetting industry. '
+                        'Lorem Ipsum has been the industry standard dummy text ever since the 1500s.',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 14),
+                Container(
+                  width: 400,
+                  height: 480,
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 4.0,
+                      mainAxisSpacing: 4.0,
+                    ),
+                    itemCount: 6,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        child: Image.network(
+                          imageUrls[index],
+                          fit: BoxFit.cover,
                         ),
-                      ),
-                    ],
+                      );
+                    },
+                  ),
+                )
+              ],
+            ),
+          );
+        } else {
+          return SingleChildScrollView(
+            scrollDirection: Axis.vertical, // Enable horizontal scrolling
+            child: Row(
+              children: [
+                // Container with ClipOval
+                Container(
+                  height: 350,
+                  width: 380,
+                  child: ClipOval(
+                    child: Image.network(
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO1CV0pHwcT9Y3Z1oHHypnKTPU0zYIXa4F1GTARLZn&s',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-                ResponsiveGridRow(
-                  children: [
-                    ResponsiveGridCol(
-                      xs: 12,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Image.network(
-                                'https://picsum.photos/250?image=10',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Image.network(
-                                'https://picsum.photos/250?image=11',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
+                SizedBox(width: 35,),
 
-                          Expanded(
-                            flex: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Image.network(
-                                'https://picsum.photos/250?image=12',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+
+                // GridView
+                Column(
+                  children: [
+                    SizedBox(height: 40,),
+                    Container(
+                        height: 40,
+                        child: Text(
+                          'Labib Zaman',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
+                        )
+                    ),
+                    SizedBox(height: 10), // Adjust spacing as needed
+                    Text(
+                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+                      style: TextStyle(
+                        fontSize: 14, // Reduce font size
                       ),
                     ),
-                  ],
-                ),
-                ResponsiveGridRow(
-                  children: [
-                    ResponsiveGridCol(
-                      xs: 12,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Image.network(
-                                'https://picsum.photos/250?image=13',
-                                fit: BoxFit.cover,
-                              ),
+                    SizedBox(height: 14),
+                    Container(
+                      width: 450,
+                      height: 480,
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          crossAxisSpacing: 4.0,
+                          mainAxisSpacing: 4.0,
+                        ),
+                        itemCount: 8,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            child: Image.network(
+                              imageUrls[index],
+                              fit: BoxFit.cover,
                             ),
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Image.network(
-                                'https://picsum.photos/250?image=14',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-
-                          Expanded(
-                            flex: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Image.network(
-                                'https://picsum.photos/250?image=15',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                ResponsiveGridRow(
-                  children: [
-                    ResponsiveGridCol(
-                      xs: 12,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Image.network(
-                                'https://picsum.photos/250?image=16',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Image.network(
-                                'https://picsum.photos/250?image=17',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-
-                          Expanded(
-                            flex: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Image.network(
-                                'https://picsum.photos/250?image=18',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-          ),
-        ),
-      ],
+          );
+
+        }
+      }),
     );
   }
 }
-class PortraitScreenProfile extends StatelessWidget {
-  const PortraitScreenProfile({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              radius: 180,
-              backgroundImage: NetworkImage(
-                'https://picsum.photos/250?image=9',
-              ),
-            ),
-          ),
-          const Text(
-            'Arafat Rahman',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 280,
-              child: ListView(
-                children: [
-                  const Text(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  ResponsiveGridRow(
-                    children: [
-                      ResponsiveGridCol(
-                        xs: 12,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Image.network(
-                                  'https://picsum.photos/250?image=10',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 4,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Image.network(
-                                  'https://picsum.photos/250?image=11',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-
-                            Expanded(
-                              flex: 4,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Image.network(
-                                  'https://picsum.photos/250?image=12',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  ResponsiveGridRow(
-                    children: [
-                      ResponsiveGridCol(
-                        xs: 12,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Image.network(
-                                  'https://picsum.photos/250?image=13',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 4,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Image.network(
-                                  'https://picsum.photos/250?image=14',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-
-                            Expanded(
-                              flex: 4,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Image.network(
-                                  'https://picsum.photos/250?image=15',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  ResponsiveGridRow(
-                    children: [
-                      ResponsiveGridCol(
-                        xs: 12,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Image.network(
-                                  'https://picsum.photos/250?image=16',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 4,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Image.network(
-                                  'https://picsum.photos/250?image=17',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-
-                            Expanded(
-                              flex: 4,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Image.network(
-                                  'https://picsum.photos/250?image=18',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+List<String> imageUrls = [
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjE37Vpx1uCH6qswVxFohVxx6GrlnM6O1zsQ&usqp=CAU",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjE37Vpx1uCH6qswVxFohVxx6GrlnM6O1zsQ&usqp=CAU",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjE37Vpx1uCH6qswVxFohVxx6GrlnM6O1zsQ&usqp=CAU",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjE37Vpx1uCH6qswVxFohVxx6GrlnM6O1zsQ&usqp=CAU",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjE37Vpx1uCH6qswVxFohVxx6GrlnM6O1zsQ&usqp=CAU",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjE37Vpx1uCH6qswVxFohVxx6GrlnM6O1zsQ&usqp=CAU",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjE37Vpx1uCH6qswVxFohVxx6GrlnM6O1zsQ&usqp=CAU",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjE37Vpx1uCH6qswVxFohVxx6GrlnM6O1zsQ&usqp=CAU",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjE37Vpx1uCH6qswVxFohVxx6GrlnM6O1zsQ&usqp=CAU",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjE37Vpx1uCH6qswVxFohVxx6GrlnM6O1zsQ&usqp=CAU",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjE37Vpx1uCH6qswVxFohVxx6GrlnM6O1zsQ&usqp=CAU",
+];
